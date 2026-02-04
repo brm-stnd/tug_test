@@ -55,8 +55,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-800">Dashboard</h1>
-        <p className="text-slate-600 mt-1">Overview of your fleet fuel management</p>
+        <h1 className="text-3xl font-bold text-slate-100">Dashboard</h1>
+        <p className="text-slate-200 mt-1">Overview of your fleet fuel management</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -67,7 +67,7 @@ export default function DashboardPage() {
                 <stat.icon className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-slate-600">{stat.name}</p>
+                <p className="text-sm text-slate-800">{stat.name}</p>
                 <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
               </div>
             </div>
@@ -88,19 +88,19 @@ export default function DashboardPage() {
                     <p className="font-medium text-slate-800">
                       {txn.stationName || 'Unknown Station'}
                     </p>
-                    <p className="text-sm text-slate-500">{txn.fuelType || 'Fuel'}</p>
+                    <p className="text-sm text-slate-700">{txn.fuelType || 'Fuel'}</p>
                   </div>
                   <div className="text-right">
                     <p className={`font-semibold ${txn.status === 'APPROVED' ? 'text-emerald-600' : 'text-red-600'}`}>
                       {formatCurrency(txn.amount)}
                     </p>
-                    <p className="text-xs text-slate-500">{txn.status}</p>
+                    <p className="text-xs text-slate-700">{txn.status}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-slate-500 text-center py-8">No transactions yet</p>
+            <p className="text-slate-700 text-center py-8">No transactions yet</p>
           )}
         </Card>
 
@@ -114,7 +114,7 @@ export default function DashboardPage() {
                 >
                   <div>
                     <p className="font-medium text-slate-800">{org.name}</p>
-                    <p className="text-sm text-slate-500">{org.timezone}</p>
+                    <p className="text-sm text-slate-700">{org.timezone}</p>
                   </div>
                   <span className={`px-2 py-1 rounded text-xs font-medium ${
                     org.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
@@ -125,7 +125,7 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <p className="text-slate-500 text-center py-8">No organizations yet</p>
+            <p className="text-slate-700 text-center py-8">No organizations yet</p>
           )}
         </Card>
       </div>

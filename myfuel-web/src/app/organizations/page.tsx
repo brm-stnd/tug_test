@@ -78,8 +78,8 @@ export default function OrganizationsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Organizations</h1>
-          <p className="text-slate-600 mt-1">Manage fleet organizations and balances</p>
+          <h1 className="text-3xl font-bold text-slate-100">Organizations</h1>
+          <p className="text-slate-200 mt-1">Manage fleet organizations and balances</p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -89,17 +89,17 @@ export default function OrganizationsPage() {
 
       <Card>
         {isLoading ? (
-          <div className="text-center py-8 text-slate-500">Loading...</div>
+          <div className="text-center py-8 text-slate-700">Loading...</div>
         ) : organizations && organizations.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Name</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Timezone</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Created</th>
-                  <th className="text-right py-3 px-4 font-medium text-slate-600">Actions</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Name</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Status</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Timezone</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Created</th>
+                  <th className="text-right py-3 px-4 font-medium text-slate-800">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -107,13 +107,13 @@ export default function OrganizationsPage() {
                   <tr key={org.id} className="border-b last:border-0 hover:bg-slate-50">
                     <td className="py-4 px-4">
                       <p className="font-medium text-slate-800">{org.name}</p>
-                      <p className="text-xs text-slate-500">{org.id}</p>
+                      <p className="text-xs text-slate-700">{org.id}</p>
                     </td>
                     <td className="py-4 px-4">
                       <Badge variant={getStatusVariant(org.status)}>{org.status}</Badge>
                     </td>
-                    <td className="py-4 px-4 text-slate-600">{org.timezone}</td>
-                    <td className="py-4 px-4 text-slate-600 text-sm">
+                    <td className="py-4 px-4 text-slate-800">{org.timezone}</td>
+                    <td className="py-4 px-4 text-slate-800 text-sm">
                       {formatDate(org.createdAt)}
                     </td>
                     <td className="py-4 px-4 text-right">
@@ -133,7 +133,7 @@ export default function OrganizationsPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-slate-500 mb-4">No organizations yet</p>
+            <p className="text-slate-700 mb-4">No organizations yet</p>
             <Button onClick={() => setShowCreateModal(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Create your first organization

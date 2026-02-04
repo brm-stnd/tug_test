@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Ban, CheckCircle } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Card, Button, Badge, getStatusVariant, Modal, Input } from '@/components/ui';
 import { cardsApi, organizationsApi } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
@@ -29,16 +29,6 @@ export default function CardsPage() {
     },
   });
 
-  const blockMutation = useMutation({
-    mutationFn: cardsApi.block,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cards'] }),
-  });
-
-  const unblockMutation = useMutation({
-    mutationFn: cardsApi.unblock,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['cards'] }),
-  });
-
   const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -59,8 +49,8 @@ export default function CardsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Fuel Cards</h1>
-          <p className="text-slate-600 mt-1">Manage fleet fuel cards</p>
+          <h1 className="text-3xl font-bold text-slate-100">Fuel Cards</h1>
+          <p className="text-slate-200 mt-1">Manage fleet fuel cards</p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -70,19 +60,18 @@ export default function CardsPage() {
 
       <Card>
         {isLoading ? (
-          <div className="text-center py-8 text-slate-500">Loading...</div>
+          <div className="text-center py-8 text-slate-700">Loading...</div>
         ) : cards && cards.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Card Number</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Holder</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Organization</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Daily Limit</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Monthly Limit</th>
-                  <th className="text-right py-3 px-4 font-medium text-slate-600">Actions</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Card Number</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Holder</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Organization</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Status</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Daily Limit</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Monthly Limit</th>
                 </tr>
               </thead>
               <tbody>
@@ -91,41 +80,18 @@ export default function CardsPage() {
                     <td className="py-4 px-4">
                       <p className="font-mono font-medium text-slate-800">{card.cardNumber}</p>
                     </td>
-                    <td className="py-4 px-4 text-slate-600">{card.holderName || '-'}</td>
-                    <td className="py-4 px-4 text-slate-600 text-sm">
+                    <td className="py-4 px-4 text-slate-800">{card.holderName || '-'}</td>
+                    <td className="py-4 px-4 text-slate-800 text-sm">
                       {getOrgName(card.organizationId)}
                     </td>
                     <td className="py-4 px-4">
                       <Badge variant={getStatusVariant(card.status)}>{card.status}</Badge>
                     </td>
-                    <td className="py-4 px-4 text-slate-600">
+                    <td className="py-4 px-4 text-slate-800">
                       {formatCurrency(card.dailyLimit)}
                     </td>
-                    <td className="py-4 px-4 text-slate-600">
+                    <td className="py-4 px-4 text-slate-800">
                       {formatCurrency(card.monthlyLimit)}
-                    </td>
-                    <td className="py-4 px-4 text-right">
-                      {card.status === 'ACTIVE' ? (
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => blockMutation.mutate(card.id)}
-                          loading={blockMutation.isPending}
-                        >
-                          <Ban className="w-4 h-4 mr-1" />
-                          Block
-                        </Button>
-                      ) : card.status === 'BLOCKED' ? (
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => unblockMutation.mutate(card.id)}
-                          loading={unblockMutation.isPending}
-                        >
-                          <CheckCircle className="w-4 h-4 mr-1" />
-                          Unblock
-                        </Button>
-                      ) : null}
                     </td>
                   </tr>
                 ))}
@@ -134,7 +100,7 @@ export default function CardsPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-slate-500 mb-4">No cards yet</p>
+            <p className="text-slate-700 mb-4">No cards yet</p>
             <Button onClick={() => setShowCreateModal(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Create your first card
@@ -151,13 +117,13 @@ export default function CardsPage() {
       >
         <form onSubmit={handleCreateSubmit} className="space-y-4">
           <div className="space-y-1">
-            <label className="block text-sm font-medium text-slate-700">
+            <label className="block text-sm font-medium text-slate-900">
               Organization
             </label>
             <select
               name="organizationId"
               required
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900"
             >
               <option value="">Select organization...</option>
               {organizations?.map((org) => (

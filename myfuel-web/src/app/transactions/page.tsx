@@ -52,8 +52,8 @@ export default function TransactionsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Transactions</h1>
-          <p className="text-slate-600 mt-1">View and process fuel transactions</p>
+          <h1 className="text-3xl font-bold text-slate-100">Transactions</h1>
+          <p className="text-slate-200 mt-1">View and process fuel transactions</p>
         </div>
         <Button onClick={() => setShowCreateModal(true)}>
           <Plus className="w-4 h-4 mr-2" />
@@ -68,7 +68,7 @@ export default function TransactionsPage() {
           <select
             value={filterOrgId}
             onChange={(e) => setFilterOrgId(e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900"
           >
             <option value="">All Organizations</option>
             {organizations?.map((org) => (
@@ -82,36 +82,36 @@ export default function TransactionsPage() {
 
       <Card>
         {isLoading ? (
-          <div className="text-center py-8 text-slate-500">Loading...</div>
+          <div className="text-center py-8 text-slate-700">Loading...</div>
         ) : transactions && transactions.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Date</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Organization</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Station</th>
-                  <th className="text-left py-3 px-4 font-medium text-slate-600">Fuel</th>
-                  <th className="text-right py-3 px-4 font-medium text-slate-600">Liters</th>
-                  <th className="text-right py-3 px-4 font-medium text-slate-600">Amount</th>
-                  <th className="text-center py-3 px-4 font-medium text-slate-600">Status</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Date</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Organization</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Station</th>
+                  <th className="text-left py-3 px-4 font-medium text-slate-800">Fuel</th>
+                  <th className="text-right py-3 px-4 font-medium text-slate-800">Liters</th>
+                  <th className="text-right py-3 px-4 font-medium text-slate-800">Amount</th>
+                  <th className="text-center py-3 px-4 font-medium text-slate-800">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {transactions.map((txn) => (
                   <tr key={txn.id} className="border-b last:border-0 hover:bg-slate-50">
-                    <td className="py-4 px-4 text-slate-600 text-sm">
+                    <td className="py-4 px-4 text-slate-800 text-sm">
                       {formatDate(txn.createdAt)}
                     </td>
-                    <td className="py-4 px-4 text-slate-600 text-sm">
+                    <td className="py-4 px-4 text-slate-800 text-sm">
                       {getOrgName(txn.organizationId)}
                     </td>
                     <td className="py-4 px-4">
                       <p className="font-medium text-slate-800">{txn.stationName || '-'}</p>
-                      <p className="text-xs text-slate-500">{txn.stationId}</p>
+                      <p className="text-xs text-slate-700">{txn.stationId}</p>
                     </td>
-                    <td className="py-4 px-4 text-slate-600">{txn.fuelType || '-'}</td>
-                    <td className="py-4 px-4 text-right text-slate-600">
+                    <td className="py-4 px-4 text-slate-800">{txn.fuelType || '-'}</td>
+                    <td className="py-4 px-4 text-right text-slate-800">
                       {txn.liters ? `${txn.liters} L` : '-'}
                     </td>
                     <td className="py-4 px-4 text-right font-medium text-slate-800">
@@ -130,7 +130,7 @@ export default function TransactionsPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-slate-500 mb-4">No transactions yet</p>
+            <p className="text-slate-700 mb-4">No transactions yet</p>
             <Button onClick={() => setShowCreateModal(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Process your first transaction
@@ -175,12 +175,12 @@ export default function TransactionsPage() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="block text-sm font-medium text-slate-700">
+              <label className="block text-sm font-medium text-slate-900">
                 Fuel Type
               </label>
               <select
                 name="fuelType"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900"
               >
                 <option value="PERTAMAX">Pertamax</option>
                 <option value="PERTAMAX_TURBO">Pertamax Turbo</option>
