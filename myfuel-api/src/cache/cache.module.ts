@@ -34,7 +34,10 @@ import { CacheService } from './cache.service';
             ttl: 3600 * 1000, // 1 hour default
           };
         } catch (error) {
-          console.warn('Failed to connect to Redis, using in-memory cache:', error.message);
+          console.warn(
+            'Failed to connect to Redis, using in-memory cache:',
+            error.message,
+          );
           return {
             ttl: 3600 * 1000,
           };

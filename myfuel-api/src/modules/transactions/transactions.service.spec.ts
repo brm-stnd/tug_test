@@ -1,8 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { TransactionsService, ProcessTransactionData } from './transactions.service';
-import { Transaction, TransactionStatus, DeclineReason } from './entities/transaction.entity';
+import {
+  TransactionsService,
+  ProcessTransactionData,
+} from './transactions.service';
+import {
+  Transaction,
+  TransactionStatus,
+  DeclineReason,
+} from './entities/transaction.entity';
 import { CardsService } from '../cards/cards.service';
 import { OrganizationsService } from '../organizations/organizations.service';
 import { NotFoundException } from '@nestjs/common';
@@ -95,7 +102,9 @@ describe('TransactionsService', () => {
     it('should throw NotFoundException when transaction not found', async () => {
       transactionRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('non-existent')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('non-existent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -156,7 +165,9 @@ describe('TransactionsService', () => {
 
     it('should decline when card not found', async () => {
       transactionRepository.findOne.mockResolvedValue(null);
-      cardsService.findByCardNumber.mockRejectedValue(new NotFoundException('Card not found'));
+      cardsService.findByCardNumber.mockRejectedValue(
+        new NotFoundException('Card not found'),
+      );
       transactionRepository.create.mockReturnValue({
         ...mockTransaction,
         status: TransactionStatus.DECLINED,

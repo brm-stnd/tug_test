@@ -13,16 +13,16 @@ export interface MessagePayload<T = unknown> {
 export class RabbitMQService implements OnModuleInit {
   private readonly logger = new Logger(RabbitMQService.name);
 
-  constructor(
-    @Inject('MYFUEL_SERVICE') private readonly client: ClientProxy,
-  ) {}
+  constructor(@Inject('MYFUEL_SERVICE') private readonly client: ClientProxy) {}
 
   async onModuleInit() {
     try {
       await this.client.connect();
       this.logger.log('Connected to RabbitMQ');
     } catch (error) {
-      this.logger.warn(`Failed to connect to RabbitMQ: ${error.message}. Running in degraded mode.`);
+      this.logger.warn(
+        `Failed to connect to RabbitMQ: ${error.message}. Running in degraded mode.`,
+      );
     }
   }
 
@@ -34,11 +34,10 @@ export class RabbitMQService implements OnModuleInit {
     data: TInput,
   ): Promise<TResult> {
     this.logger.debug(`Sending message: ${pattern}`);
-    
-    const result$ = this.client.send<TResult, TInput>(pattern, data).pipe(
-      timeout(30000),
-      retry({ count: 3, delay: 1000 }),
-    );
+
+    const result$ = this.client
+      .send<TResult, TInput>(pattern, data)
+      .pipe(timeout(30000), retry({ count: 3, delay: 1000 }));
 
     return lastValueFrom(result$);
   }

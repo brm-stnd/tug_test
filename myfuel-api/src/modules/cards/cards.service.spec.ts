@@ -3,7 +3,10 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { CardsService } from './cards.service';
 import { Card, CardStatus } from './entities/card.entity';
-import { CardSpendingCounter, PeriodType } from './entities/card-spending-counter.entity';
+import {
+  CardSpendingCounter,
+  PeriodType,
+} from './entities/card-spending-counter.entity';
 import { OrganizationsService } from '../organizations/organizations.service';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import * as helpers from '../../common/utils/helpers';
@@ -111,7 +114,9 @@ describe('CardsService', () => {
     it('should throw NotFoundException when card not found', async () => {
       cardRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('non-existent')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('non-existent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -128,7 +133,9 @@ describe('CardsService', () => {
     it('should throw NotFoundException when card not found', async () => {
       cardRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findByCardNumber('0000000000000000')).rejects.toThrow(NotFoundException);
+      await expect(
+        service.findByCardNumber('0000000000000000'),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -188,7 +195,7 @@ describe('CardsService', () => {
   describe('getSpending', () => {
     it('should return spending summary with counters', async () => {
       cardRepository.findOne.mockResolvedValue(mockCard);
-      
+
       const dailyCounter: CardSpendingCounter = {
         id: 'counter-1',
         cardId: 'card-123',
@@ -246,7 +253,11 @@ describe('CardsService', () => {
       cardRepository.findOne.mockResolvedValue(mockCard);
       counterRepository.findOne.mockResolvedValue(null);
 
-      const result = await service.validateCardForTransaction('card-123', '100.00', 'UTC');
+      const result = await service.validateCardForTransaction(
+        'card-123',
+        '100.00',
+        'UTC',
+      );
 
       expect(result.valid).toBe(true);
     });
@@ -255,7 +266,11 @@ describe('CardsService', () => {
       const inactiveCard = { ...mockCard, status: CardStatus.BLOCKED };
       cardRepository.findOne.mockResolvedValue(inactiveCard);
 
-      const result = await service.validateCardForTransaction('card-123', '100.00', 'UTC');
+      const result = await service.validateCardForTransaction(
+        'card-123',
+        '100.00',
+        'UTC',
+      );
 
       expect(result.valid).toBe(false);
       expect(result.reason).toBe('CARD_INACTIVE');
@@ -263,7 +278,7 @@ describe('CardsService', () => {
 
     it('should return invalid when daily limit exceeded', async () => {
       cardRepository.findOne.mockResolvedValue(mockCard);
-      
+
       const dailyCounter: CardSpendingCounter = {
         id: 'counter-1',
         cardId: 'card-123',
@@ -281,7 +296,11 @@ describe('CardsService', () => {
         .mockResolvedValueOnce(dailyCounter)
         .mockResolvedValueOnce(null);
 
-      const result = await service.validateCardForTransaction('card-123', '100.00', 'UTC');
+      const result = await service.validateCardForTransaction(
+        'card-123',
+        '100.00',
+        'UTC',
+      );
 
       expect(result.valid).toBe(false);
       expect(result.reason).toBe('DAILY_LIMIT_EXCEEDED');

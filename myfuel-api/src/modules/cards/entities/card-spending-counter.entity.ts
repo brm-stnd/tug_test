@@ -38,7 +38,13 @@ export class CardSpendingCounter {
   @Column({ name: 'period_key', length: 10 })
   periodKey: string;
 
-  @Column({ name: 'amount_spent', type: 'decimal', precision: 18, scale: 2, default: 0 })
+  @Column({
+    name: 'amount_spent',
+    type: 'decimal',
+    precision: 18,
+    scale: 2,
+    default: 0,
+  })
   amountSpent: string;
 
   @Column({ name: 'transaction_count', type: 'int', default: 0 })

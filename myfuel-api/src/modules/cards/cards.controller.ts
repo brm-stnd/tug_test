@@ -16,11 +16,7 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { CardsService } from './cards.service';
-import {
-  CreateCardDto,
-  UpdateCardDto,
-  CardResponseDto,
-} from './dto';
+import { CreateCardDto, UpdateCardDto, CardResponseDto } from './dto';
 
 @ApiTags('cards')
 @Controller('cards')

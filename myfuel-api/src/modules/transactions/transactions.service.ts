@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import {
@@ -83,7 +79,9 @@ export class TransactionsService {
   /**
    * Process a transaction with full validation and atomic updates
    */
-  async processTransaction(data: ProcessTransactionData): Promise<TransactionResult> {
+  async processTransaction(
+    data: ProcessTransactionData,
+  ): Promise<TransactionResult> {
     // Check idempotency
     const existing = await this.findByIdempotencyKey(data.idempotencyKey);
     if (existing) {
@@ -129,7 +127,9 @@ export class TransactionsService {
       );
 
       if (!cardValidation.valid) {
-        const declineReason = this.mapDeclineReason(cardValidation.reason || 'UNKNOWN');
+        const declineReason = this.mapDeclineReason(
+          cardValidation.reason || 'UNKNOWN',
+        );
         const transaction = await this.createDeclinedTransaction(
           data,
           organization.id,
@@ -145,10 +145,11 @@ export class TransactionsService {
       }
 
       // Step 2: Check organization balance
-      const hasSufficientBalance = await this.organizationsService.hasSufficientBalance(
-        organization.id,
-        data.amount,
-      );
+      const hasSufficientBalance =
+        await this.organizationsService.hasSufficientBalance(
+          organization.id,
+          data.amount,
+        );
 
       if (!hasSufficientBalance) {
         const transaction = await this.createDeclinedTransaction(
@@ -198,7 +199,9 @@ export class TransactionsService {
       );
 
       // Get updated balance
-      const updatedBalance = await this.organizationsService.getBalance(organization.id);
+      const updatedBalance = await this.organizationsService.getBalance(
+        organization.id,
+      );
 
       this.logger.log(
         `Transaction approved: ${savedTransaction.id} - Amount: ${data.amount}`,
@@ -235,7 +238,9 @@ export class TransactionsService {
     });
 
     const saved = await this.transactionRepository.save(transaction);
-    this.logger.log(`Transaction declined: ${saved.id} - Reason: ${declineReason}`);
+    this.logger.log(
+      `Transaction declined: ${saved.id} - Reason: ${declineReason}`,
+    );
     return saved;
   }
 

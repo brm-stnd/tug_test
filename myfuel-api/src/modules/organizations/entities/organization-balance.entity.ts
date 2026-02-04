@@ -18,10 +18,22 @@ export class OrganizationBalance {
   @Column({ name: 'organization_id' })
   organizationId: string;
 
-  @Column({ name: 'current_balance', type: 'decimal', precision: 18, scale: 2, default: 0 })
+  @Column({
+    name: 'current_balance',
+    type: 'decimal',
+    precision: 18,
+    scale: 2,
+    default: 0,
+  })
   currentBalance: string;
 
-  @Column({ name: 'reserved_balance', type: 'decimal', precision: 18, scale: 2, default: 0 })
+  @Column({
+    name: 'reserved_balance',
+    type: 'decimal',
+    precision: 18,
+    scale: 2,
+    default: 0,
+  })
   reservedBalance: string;
 
   @Column({ length: 3, default: 'USD' })
@@ -43,6 +55,8 @@ export class OrganizationBalance {
   organization: Organization;
 
   get availableBalance(): string {
-    return (parseFloat(this.currentBalance) - parseFloat(this.reservedBalance)).toFixed(2);
+    return (
+      parseFloat(this.currentBalance) - parseFloat(this.reservedBalance)
+    ).toFixed(2);
   }
 }

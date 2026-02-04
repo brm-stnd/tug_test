@@ -188,13 +188,16 @@ export class OrganizationsService {
       );
     }
 
-    const available = parseFloat(balance.currentBalance) - parseFloat(balance.reservedBalance);
+    const available =
+      parseFloat(balance.currentBalance) - parseFloat(balance.reservedBalance);
     if (available < parseFloat(amount)) {
       throw new ConflictException('Insufficient balance');
     }
 
     const balanceBefore = balance.currentBalance;
-    const newBalance = (parseFloat(balance.currentBalance) - parseFloat(amount)).toFixed(2);
+    const newBalance = (
+      parseFloat(balance.currentBalance) - parseFloat(amount)
+    ).toFixed(2);
     balance.currentBalance = newBalance;
     await manager.save(balance);
 

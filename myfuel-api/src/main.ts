@@ -81,7 +81,9 @@ Webhook endpoints require signature verification via \`x-webhook-signature\` hea
       },
     });
 
-    logger.log(`Swagger documentation available at http://localhost:${port}/api/docs`);
+    logger.log(
+      `Swagger documentation available at http://localhost:${port}/api/docs`,
+    );
   }
 
   // Start server

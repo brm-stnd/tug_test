@@ -4,7 +4,11 @@ import { SagaOrchestrator } from '../saga-orchestrator.service';
 import { SagaState, SagaStatus } from '../interfaces';
 import { CardsService } from '../../modules/cards/cards.service';
 import { OrganizationsService } from '../../modules/organizations/organizations.service';
-import { Transaction, TransactionStatus, DeclineReason } from '../../modules/transactions/entities/transaction.entity';
+import {
+  Transaction,
+  TransactionStatus,
+  DeclineReason,
+} from '../../modules/transactions/entities/transaction.entity';
 import { Card } from '../../modules/cards/entities/card.entity';
 
 export interface TransactionSagaData {
@@ -54,8 +58,10 @@ export class ProcessTransactionSaga {
       name: 'ValidateCard',
       execute: async (sagaData) => {
         this.logger.log(`Validating card: ${sagaData.cardNumber.slice(-4)}`);
-        
-        const card = await this.cardsService.findByCardNumber(sagaData.cardNumber);
+
+        const card = await this.cardsService.findByCardNumber(
+          sagaData.cardNumber,
+        );
         sagaData.card = card;
         sagaData.organizationId = card.organizationId;
         sagaData.timezone = card.organization?.timezone || 'UTC';
@@ -79,16 +85,19 @@ export class ProcessTransactionSaga {
     orchestrator.addStep({
       name: 'CheckBalance',
       execute: async (sagaData) => {
-        this.logger.log(`Checking balance for organization: ${sagaData.organizationId}`);
-        
+        this.logger.log(
+          `Checking balance for organization: ${sagaData.organizationId}`,
+        );
+
         if (!sagaData.organizationId) {
           throw new Error('Organization ID not found');
         }
 
-        const hasSufficientBalance = await this.organizationsService.hasSufficientBalance(
-          sagaData.organizationId,
-          sagaData.amount,
-        );
+        const hasSufficientBalance =
+          await this.organizationsService.hasSufficientBalance(
+            sagaData.organizationId,
+            sagaData.amount,
+          );
 
         if (!hasSufficientBalance) {
           throw new Error('INSUFFICIENT_BALANCE');
@@ -103,15 +112,17 @@ export class ProcessTransactionSaga {
     orchestrator.addStep({
       name: 'DeductBalance',
       execute: async (sagaData) => {
-        this.logger.log(`Deducting ${sagaData.amount} from organization ${sagaData.organizationId}`);
-        
+        this.logger.log(
+          `Deducting ${sagaData.amount} from organization ${sagaData.organizationId}`,
+        );
+
         if (!sagaData.card || !sagaData.organizationId) {
           throw new Error('Card or organization not found');
         }
 
         const cardId = sagaData.card.id;
         const orgId = sagaData.organizationId;
-        
+
         await this.dataSource.transaction(async (manager) => {
           // Create transaction record first
           const transaction = manager.create(Transaction, {
@@ -139,12 +150,18 @@ export class ProcessTransactionSaga {
         });
       },
       compensate: async (sagaData) => {
-        if (sagaData.balanceDeducted && sagaData.transaction && sagaData.organizationId) {
-          this.logger.log(`Compensating: Refunding ${sagaData.amount} to organization ${sagaData.organizationId}`);
-          
+        if (
+          sagaData.balanceDeducted &&
+          sagaData.transaction &&
+          sagaData.organizationId
+        ) {
+          this.logger.log(
+            `Compensating: Refunding ${sagaData.amount} to organization ${sagaData.organizationId}`,
+          );
+
           const transactionId = sagaData.transaction.id;
           const orgId = sagaData.organizationId;
-          
+
           await this.dataSource.transaction(async (manager) => {
             // Refund balance via top-up
             await this.organizationsService.topUpBalance(orgId, {
@@ -168,12 +185,12 @@ export class ProcessTransactionSaga {
         if (!sagaData.card) {
           throw new Error('Card not found');
         }
-        
+
         const cardId = sagaData.card.id;
         const timezone = sagaData.timezone || 'UTC';
-        
+
         this.logger.log(`Updating spending counters for card: ${cardId}`);
-        
+
         await this.dataSource.transaction(async (manager) => {
           await this.cardsService.updateSpendingCounters(
             cardId,
@@ -188,9 +205,11 @@ export class ProcessTransactionSaga {
         if (sagaData.countersUpdated && sagaData.card) {
           const cardId = sagaData.card.id;
           const timezone = sagaData.timezone || 'UTC';
-          
-          this.logger.log(`Compensating: Rolling back spending counters for card: ${cardId}`);
-          
+
+          this.logger.log(
+            `Compensating: Rolling back spending counters for card: ${cardId}`,
+          );
+
           await this.dataSource.transaction(async (manager) => {
             await this.cardsService.rollbackSpendingCounters(
               cardId,
@@ -210,10 +229,10 @@ export class ProcessTransactionSaga {
         if (!sagaData.transaction) {
           throw new Error('Transaction not found');
         }
-        
+
         const transactionId = sagaData.transaction.id;
         this.logger.log(`Approving transaction: ${transactionId}`);
-        
+
         await this.dataSource
           .createQueryBuilder()
           .update(Transaction)
@@ -234,7 +253,9 @@ export class ProcessTransactionSaga {
 
     // Build result
     if (sagaState.status === SagaStatus.COMPLETED) {
-      const balance = await this.organizationsService.getBalance(data.organizationId!);
+      const balance = await this.organizationsService.getBalance(
+        data.organizationId!,
+      );
       return {
         sagaState,
         transactionId: data.transaction!.id,
@@ -244,7 +265,9 @@ export class ProcessTransactionSaga {
       };
     } else {
       // Map error to decline reason
-      const declineReason = this.mapErrorToDeclineReason(sagaState.error || 'UNKNOWN');
+      const declineReason = this.mapErrorToDeclineReason(
+        sagaState.error || 'UNKNOWN',
+      );
       return {
         sagaState,
         transactionId: data.transaction?.id,

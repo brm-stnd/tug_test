@@ -38,14 +38,26 @@ export class Card {
   @Column({
     type: 'enum',
     enum: CardStatus,
-    default: CardStatus.PENDING,
+    default: CardStatus.ACTIVE,
   })
   status: CardStatus;
 
-  @Column({ name: 'daily_limit', type: 'decimal', precision: 18, scale: 2, default: 500 })
+  @Column({
+    name: 'daily_limit',
+    type: 'decimal',
+    precision: 18,
+    scale: 2,
+    default: 500,
+  })
   dailyLimit: string;
 
-  @Column({ name: 'monthly_limit', type: 'decimal', precision: 18, scale: 2, default: 5000 })
+  @Column({
+    name: 'monthly_limit',
+    type: 'decimal',
+    precision: 18,
+    scale: 2,
+    default: 5000,
+  })
   monthlyLimit: string;
 
   @Column({ name: 'holder_name', length: 255, nullable: true })

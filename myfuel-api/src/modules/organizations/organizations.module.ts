@@ -8,7 +8,11 @@ import { BalanceLedger } from './entities/balance-ledger.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Organization, OrganizationBalance, BalanceLedger]),
+    TypeOrmModule.forFeature([
+      Organization,
+      OrganizationBalance,
+      BalanceLedger,
+    ]),
   ],
   controllers: [OrganizationsController],
   providers: [OrganizationsService],

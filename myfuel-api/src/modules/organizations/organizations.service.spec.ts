@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { OrganizationsService } from './organizations.service';
-import { Organization, OrganizationStatus } from './entities/organization.entity';
+import {
+  Organization,
+  OrganizationStatus,
+} from './entities/organization.entity';
 import { OrganizationBalance } from './entities/organization-balance.entity';
 import { BalanceLedger } from './entities/balance-ledger.entity';
 import { NotFoundException } from '@nestjs/common';
@@ -35,7 +38,9 @@ describe('OrganizationsService', () => {
     updatedAt: new Date(),
     organization: null,
     get availableBalance() {
-      return (parseFloat(this.currentBalance) - parseFloat(this.reservedBalance)).toFixed(2);
+      return (
+        parseFloat(this.currentBalance) - parseFloat(this.reservedBalance)
+      ).toFixed(2);
     },
   };
 
@@ -108,7 +113,9 @@ describe('OrganizationsService', () => {
     it('should throw NotFoundException when organization not found', async () => {
       organizationRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('non-existent')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('non-existent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -139,7 +146,9 @@ describe('OrganizationsService', () => {
     it('should throw NotFoundException when balance not found', async () => {
       balanceRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.getBalance('non-existent')).rejects.toThrow(NotFoundException);
+      await expect(service.getBalance('non-existent')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -163,7 +172,10 @@ describe('OrganizationsService', () => {
 
   describe('getLedger', () => {
     it('should return ledger entries', async () => {
-      const ledgerEntries = [{ id: 'ledger-1' }, { id: 'ledger-2' }] as BalanceLedger[];
+      const ledgerEntries = [
+        { id: 'ledger-1' },
+        { id: 'ledger-2' },
+      ] as BalanceLedger[];
       ledgerRepository.find.mockResolvedValue(ledgerEntries);
 
       const result = await service.getLedger('org-123', 50);

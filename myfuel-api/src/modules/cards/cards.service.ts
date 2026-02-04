@@ -58,7 +58,9 @@ export class CardsService {
     } as Partial<Card>);
 
     const savedCard = await this.cardRepository.save(card);
-    this.logger.log(`Created card: ${(savedCard as Card).id} for org: ${dto.organizationId}`);
+    this.logger.log(
+      `Created card: ${(savedCard as Card).id} for org: ${dto.organizationId}`,
+    );
 
     return savedCard as Card;
   }
@@ -114,10 +116,18 @@ export class CardsService {
 
     const [dailyCounter, monthlyCounter] = await Promise.all([
       this.counterRepository.findOne({
-        where: { cardId: id, periodType: PeriodType.DAILY, periodKey: dailyKey },
+        where: {
+          cardId: id,
+          periodType: PeriodType.DAILY,
+          periodKey: dailyKey,
+        },
       }),
       this.counterRepository.findOne({
-        where: { cardId: id, periodType: PeriodType.MONTHLY, periodKey: monthlyKey },
+        where: {
+          cardId: id,
+          periodType: PeriodType.MONTHLY,
+          periodKey: monthlyKey,
+        },
       }),
     ]);
 
@@ -126,9 +136,13 @@ export class CardsService {
 
     return {
       dailySpent,
-      dailyRemaining: (parseFloat(card.dailyLimit) - parseFloat(dailySpent)).toFixed(2),
+      dailyRemaining: (
+        parseFloat(card.dailyLimit) - parseFloat(dailySpent)
+      ).toFixed(2),
       monthlySpent,
-      monthlyRemaining: (parseFloat(card.monthlyLimit) - parseFloat(monthlySpent)).toFixed(2),
+      monthlyRemaining: (
+        parseFloat(card.monthlyLimit) - parseFloat(monthlySpent)
+      ).toFixed(2),
       periodDate: dailyKey,
     };
   }
@@ -178,8 +192,20 @@ export class CardsService {
     const dailyKey = getDailyPeriodKey(now, timezone);
     const monthlyKey = getMonthlyPeriodKey(now, timezone);
 
-    await this.upsertCounter(manager, cardId, PeriodType.DAILY, dailyKey, amount);
-    await this.upsertCounter(manager, cardId, PeriodType.MONTHLY, monthlyKey, amount);
+    await this.upsertCounter(
+      manager,
+      cardId,
+      PeriodType.DAILY,
+      dailyKey,
+      amount,
+    );
+    await this.upsertCounter(
+      manager,
+      cardId,
+      PeriodType.MONTHLY,
+      monthlyKey,
+      amount,
+    );
   }
 
   private async upsertCounter(
@@ -249,8 +275,20 @@ export class CardsService {
     const dailyKey = getDailyPeriodKey(now, timezone);
     const monthlyKey = getMonthlyPeriodKey(now, timezone);
 
-    await this.decrementCounter(manager, cardId, PeriodType.DAILY, dailyKey, amount);
-    await this.decrementCounter(manager, cardId, PeriodType.MONTHLY, monthlyKey, amount);
+    await this.decrementCounter(
+      manager,
+      cardId,
+      PeriodType.DAILY,
+      dailyKey,
+      amount,
+    );
+    await this.decrementCounter(
+      manager,
+      cardId,
+      PeriodType.MONTHLY,
+      monthlyKey,
+      amount,
+    );
   }
 
   private async decrementCounter(

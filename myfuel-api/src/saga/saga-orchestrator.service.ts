@@ -27,7 +27,9 @@ export class SagaOrchestrator<T> {
       startedAt: new Date(),
     };
 
-    this.logger.log(`Starting saga: ${state.sagaId} with ${this.steps.length} steps`);
+    this.logger.log(
+      `Starting saga: ${state.sagaId} with ${this.steps.length} steps`,
+    );
 
     try {
       for (let i = 0; i < this.steps.length; i++) {
@@ -35,7 +37,9 @@ export class SagaOrchestrator<T> {
         state.status = SagaStatus.PROCESSING;
 
         const step = this.steps[i];
-        this.logger.log(`Saga ${state.sagaId}: Executing step ${i + 1}/${this.steps.length} - ${step.name}`);
+        this.logger.log(
+          `Saga ${state.sagaId}: Executing step ${i + 1}/${this.steps.length} - ${step.name}`,
+        );
 
         await step.execute(data);
         state.completedSteps.push(step.name);
@@ -51,7 +55,9 @@ export class SagaOrchestrator<T> {
       return state;
     } catch (error) {
       state.error = error.message;
-      this.logger.error(`Saga ${state.sagaId}: Failed at step ${state.currentStep} - ${error.message}`);
+      this.logger.error(
+        `Saga ${state.sagaId}: Failed at step ${state.currentStep} - ${error.message}`,
+      );
 
       await this.compensate(state);
 
@@ -72,7 +78,9 @@ export class SagaOrchestrator<T> {
       const step = this.steps.find((s) => s.name === stepName);
 
       if (step) {
-        this.logger.log(`Saga ${state.sagaId}: Compensating step - ${step.name}`);
+        this.logger.log(
+          `Saga ${state.sagaId}: Compensating step - ${step.name}`,
+        );
         try {
           await step.compensate(state.data);
         } catch (compensationError) {
@@ -87,6 +95,8 @@ export class SagaOrchestrator<T> {
     state.status = SagaStatus.FAILED;
     state.completedAt = new Date();
 
-    this.logger.log(`Saga ${state.sagaId}: Compensation completed, saga marked as FAILED`);
+    this.logger.log(
+      `Saga ${state.sagaId}: Compensation completed, saga marked as FAILED`,
+    );
   }
 }

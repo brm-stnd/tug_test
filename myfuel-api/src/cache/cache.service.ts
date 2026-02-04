@@ -9,11 +9,11 @@ export interface CacheConfig {
 
 // TTL values in milliseconds
 export const CACHE_TTL = {
-  CARD_LOOKUP: 3600 * 1000,        // 1 hour
-  ORG_METADATA: 7200 * 1000,       // 2 hours
-  SPENDING_LIMIT: 300 * 1000,      // 5 minutes
-  TRANSACTION_STATUS: 60 * 1000,   // 1 minute
-  STATIC_DATA: 86400 * 1000,       // 24 hours
+  CARD_LOOKUP: 3600 * 1000, // 1 hour
+  ORG_METADATA: 7200 * 1000, // 2 hours
+  SPENDING_LIMIT: 300 * 1000, // 5 minutes
+  TRANSACTION_STATUS: 60 * 1000, // 1 minute
+  STATIC_DATA: 86400 * 1000, // 24 hours
 };
 
 export const CACHE_KEYS = {
@@ -21,16 +21,15 @@ export const CACHE_KEYS = {
   CARD_BY_HASH: (hash: string) => `card:hash:${hash}`,
   ORGANIZATION: (id: string) => `org:${id}`,
   ORGANIZATION_BALANCE: (id: string) => `org:balance:${id}`,
-  CARD_SPENDING: (cardId: string, date: string) => `card:spending:${cardId}:${date}`,
+  CARD_SPENDING: (cardId: string, date: string) =>
+    `card:spending:${cardId}:${date}`,
 };
 
 @Injectable()
 export class CacheService {
   private readonly logger = new Logger(CacheService.name);
 
-  constructor(
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ) {}
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   /**
    * Get a value from cache
